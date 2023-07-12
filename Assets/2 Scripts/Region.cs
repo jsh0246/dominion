@@ -9,19 +9,28 @@ using static UnityEditor.ShaderData;
 
 public class Region : MonoBehaviour
 {
+    private enum Possession { None, Competing, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
+
     [SerializeField] private Slider CapturingSlider;
-    private enum Possession { None, Competing, Unit_1P, Unit_2P, Unit_1C, Unit_2C};
     [SerializeField] Possession Poss;
+    [SerializeField] private GameObject particles;
 
     public HashSet<SelectableUnit> OnRegionUnits1P;
     public HashSet<SelectableUnit> OnRegionUnits2P;
 
-    public ScoreManager ScoreManager;
+    private ScoreManager scoreManager;
 
     private Coroutine up, down;
+    private Gradient redGrad, blueGrad;
 
     private void Start()
     {
+        redGrad = new Gradient();
+        blueGrad = new Gradient();
+
+        redGrad.SetKeys(new GradientColorKey[] { new GradientColorKey(Color.red, 0.0f), new GradientColorKey(Color.magenta, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 1.0f), new GradientAlphaKey(0.0f, 1.0f) });
+        blueGrad.SetKeys(new GradientColorKey[] { new GradientColorKey(Color.blue, 0.0f), new GradientColorKey(Color.cyan, 1.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 1.0f), new GradientAlphaKey(0.0f, 1.0f) });
+
         Poss = Possession.None;
         up = down = null;
 
@@ -29,15 +38,16 @@ public class Region : MonoBehaviour
         OnRegionUnits2P = new HashSet<SelectableUnit>();
 
         // 초기화는 다른 방법?
-        ScoreManager = GameObject.FindObjectOfType<ScoreManager>();
+        scoreManager = GameObject.FindObjectOfType<ScoreManager>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
+
         if (other.CompareTag("Unit 1"))
         {
             OnRegionUnits1P.Add(other.gameObject.GetComponent<SelectableUnit>());
-            ScoreManager.Capture1P();
 
             switch (Poss)
             {
@@ -50,9 +60,6 @@ public class Region : MonoBehaviour
                     break;
                 case Possession.Competing:
 
-                    
-
-
                     break;
                 case Possession.Unit_1P:
 
@@ -61,29 +68,29 @@ public class Region : MonoBehaviour
 
                     break;
                 case Possession.Unit_2P:
+
+
                     Poss = Possession.Competing;
                     StopAllCoroutines();
                     break;
 
                 case Possession.Unit_1C:
+                    // 점수 업
+
 
                     break;
                 case Possession.Unit_2C:
                     // 퍼센트 떨어뜨리면서 0이면 None으로
+
+                    // 위에 2P가 있으면 2C유지, 2P가 없으면 1P로 바꾸고 게이지 감소 0되면 다시 올라감
+                    // Poss = Possession.Unit_1P;
+
+                    // 여기서 상태 바꾸고 떨어뜨리는걸 해야 할듯
+
+                    StopAllCoroutines();
+                    down = StartCoroutine(SliderGaugeDown());
                     break;
-
             }
-
-            
-            
-
-            //if (up != null)
-            //    StopCoroutine(up);
-            //if (down != null)
-            //    StopCoroutine(down);
-
-            //StopAllCoroutines();
-            //up = StartCoroutine(SliderGaugeUp());
         } else if(other.CompareTag("Unit 2"))
         {
             OnRegionUnits2P.Add(other.gameObject.GetComponent<SelectableUnit>());
@@ -114,12 +121,24 @@ public class Region : MonoBehaviour
                     up = StartCoroutine(SliderGaugeUp());
 
                     break;
+                case Possession.Unit_1C:
+                    // 퍼센트 떨어뜨리면서 0이면 None으로
+                    //Poss = Possession.Unit_2P;
+
+                    StopAllCoroutines();
+                    down = StartCoroutine(SliderGaugeDown());
+                    break;
+                case Possession.Unit_2C:
+                    
+                    break;
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
+
         if (other.CompareTag("Unit 1"))
         {
             OnRegionUnits1P.Remove(other.gameObject.GetComponent<SelectableUnit>());
@@ -150,38 +169,6 @@ public class Region : MonoBehaviour
                     }
                 }
             }
-
-            //switch (Poss)
-            //{
-            //    case Possession.Competing:
-            //        break;
-            //    case Possession.Unit_1P:
-            //        break;
-            //    case Possession.Unit_2P:
-            //        break;
-            //    case Possession.Unit_1C:
-            //        break;
-            //    case Possession.Unit_2C:
-            //        break;
-            //}
-
-
-
-
-
-            //StopCoroutine(nameof(SliderGaugeUp));
-            //StopCoroutine(nameof(SliderGaugeDown));
-
-            //StopCoroutine("SliderGaugeUp");
-            //StopCoroutine("SliderGaugeDown");
-
-            //if (up != null)
-            //    StopCoroutine(up);
-            //if (down != null)
-            //    StopCoroutine(down);
-
-            //StopAllCoroutines();
-            //down = StartCoroutine(SliderGaugeDown());
         }
         else if(other.CompareTag("Unit 2"))
         {
@@ -211,22 +198,29 @@ public class Region : MonoBehaviour
                     }
                 }
             }
-
-            //switch (Poss)
-            //{
-            //    case Possession.Competing:
-            //        break;
-            //    case Possession.Unit_1P:
-            //        break;
-            //    case Possession.Unit_2P:
-            //        break;
-            //    case Possession.Unit_1C:
-            //        break;
-            //    case Possession.Unit_2C:
-            //        break;
-            //}
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (Poss == Possession.None)
+        {
+            if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
+            {
+                Poss = Possession.Unit_1P;
+                up = StartCoroutine(SliderGaugeUp());
+                print("Stay");
+            }
+            else if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
+            {
+                Poss = Possession.Unit_2P;
+                up = StartCoroutine(SliderGaugeUp());
+                print("Stay");
+            }
+        }
+    }
+
+
 
     IEnumerator SliderGaugeUp()
     {
@@ -236,8 +230,22 @@ public class Region : MonoBehaviour
 
             if(CapturingSlider.value >= 100)
             {
-                if (Poss == Possession.Unit_1P) Poss = Possession.Unit_1C;
-                else if(Poss == Possession.Unit_2P) Poss = Possession.Unit_2C;
+                if (Poss == Possession.Unit_1P)
+                {
+                    Poss = Possession.Unit_1C;
+
+                    particles.SetActive(true);
+                    var col = particles.gameObject.GetComponent<ParticleSystem>().colorOverLifetime;
+                    col.color = redGrad;
+                }
+                else if (Poss == Possession.Unit_2P)
+                {
+                    Poss = Possession.Unit_2C;
+
+                    particles.SetActive(true);
+                    var col = particles.gameObject.GetComponent<ParticleSystem>().colorOverLifetime;
+                    col.color = blueGrad;
+                }
 
                 // break or yield return null?
                 //yield return null;
@@ -253,15 +261,35 @@ public class Region : MonoBehaviour
         while (CapturingSlider.value > 0)
         {
             CapturingSlider.value -= Time.deltaTime * 1000f;
+            particles.SetActive(false);
 
-            if(CapturingSlider.value <= 0)
+            if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
+            {
+                Poss = Possession.Unit_1P;
+            } else if(OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
+            {
+                Poss = Possession.Unit_2P;
+            } else if(OnRegionUnits1P.Count > 9 && OnRegionUnits2P.Count > 0)
+            {
+                Poss = Possession.Competing;
+            }
+
+            if (CapturingSlider.value <= 0)
             {
                 Poss = Possession.None;
+
                 //yield return null;
                 break;
             }
 
             yield return new WaitForSeconds(1f);
         }
+    }
+
+    public int WhoOwnsThis()
+    {
+        if (Poss == Possession.Unit_1C) return 1;
+        else if (Poss == Possession.Unit_2C) return 2;
+        else return 0;
     }
 }

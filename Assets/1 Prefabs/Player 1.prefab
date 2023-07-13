@@ -148,8 +148,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 7
-  m_Acceleration: 8
+  m_Speed: 15
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 4
@@ -172,8 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d9e7a438f674545bec246784ff9aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  range: 5
   SelectionSprite: {fileID: 1087837745061958610}
-  CapturingSlider: {fileID: 0}
+  attackCursor: {fileID: 0}
 --- !u!1 &9038149084819798486
 GameObject:
   m_ObjectHideFlags: 0

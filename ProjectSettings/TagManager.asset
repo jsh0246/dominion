@@ -7,6 +7,9 @@ TagManager:
   - Region
   - Unit 2
   - Unit 1
+  - Wall
+  - Floor
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -14,19 +17,19 @@ TagManager:
   - 
   - Water
   - UI
-  - 
   - Floor
-  - CapturingRegion
+  - Wall
+  - Region
   - Unit 1
   - Unit 2
+  - Bullet
   - 
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
+  - Dummy
   - 
   - 
   - 

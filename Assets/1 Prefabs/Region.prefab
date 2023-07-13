@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1857997113681673104}
   - component: {fileID: 6667753250925699913}
   - component: {fileID: 4443193170316773711}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Region
   m_TagString: Region
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 1120413832863517808}
   - component: {fileID: 8021851581308821935}
   - component: {fileID: 1379768132243346902}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Region Color
   m_TagString: Untagged
   m_Icon: {fileID: 0}

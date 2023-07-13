@@ -7,12 +7,17 @@ using UnityEngine.UI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class SelectableUnit : MonoBehaviour
 {
+    public float range;
+
     private NavMeshAgent Agent;
     [SerializeField] private SpriteRenderer SelectionSprite;
-    [SerializeField] private Slider CapturingSlider;
+    [SerializeField] private Texture2D attackCursor;
+
 
     private void Awake()
     {
+        range = 20f;
+
         SelectionManager.Instance.AvailableUnits.Add(this);
         Agent = GetComponent<NavMeshAgent>();
     }
@@ -32,27 +37,16 @@ public class SelectableUnit : MonoBehaviour
         SelectionSprite.gameObject.SetActive(false);
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Region"))
-    //    {
-    //        Debug.Log("Enter");
-    //    }
-    //}
+    private void OnMouseOver()
+    {
+        if(SelectionManager.Instance.SelectedUnits.Count > 0)
+        {
+            Cursor.SetCursor(attackCursor, Vector2.zero, CursorMode.Auto);
+        }
+    }
 
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    if (other.CompareTag("Region"))
-    //    {
-    //        Debug.Log("Stay");
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("Region"))
-    //    {
-    //        Debug.Log("Exit");
-    //    }
-    //}
+    private void OnMouseExit()
+    {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
 }

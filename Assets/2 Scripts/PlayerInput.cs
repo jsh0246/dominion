@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,25 +13,73 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private LayerMask FloorLayers;
     [SerializeField] private float DragDelay = 0.1f;
 
-    [SerializeField] private Slider CapturingSlider;
-
     private float MouseDownTime;
     private Vector2 StartMousePosition;
+
+    // 임시 변수
+    Vector3 dist;
+    Vector3 _unit;
 
     private void Update()
     {
         HandleSelectionInputs();
         HandleMovementInputs();
+        TargetMove();
+
+        Debug.DrawRay(_unit, dist, Color.yellow);
+    }
+
+    private void TargetMove()
+    {
+        if (Input.GetMouseButtonUp(1) && SelectionManager.Instance.SelectedUnits.Count > 0)
+        {
+            if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Unit 2")))
+            {
+                foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
+                {
+                    Vector3 distance = hitInfo.point - unit.transform.position;
+                    dist = distance;
+                    print(distance);
+
+                    Vector3 rangedPosition = unit.transform.position + distance.normalized * unit.range;
+                    unit.MoveTo(distance);
+
+                    _unit = unit.transform.position;
+
+                    
+
+                    //print("target move out");
+
+                    //Debug.Log("Unit range " + unit.range + ", distance " + distance.magnitude + ", " + hitInfo.collider.gameObject);
+
+                    //if (unit.range < distance.magnitude)
+                    //{
+                    //    unit.MoveTo(distance.normalized * (distance.magnitude - unit.range));
+                    //    //print("target move in");
+                    //} else
+                    //{
+                    //    //print("target move else");
+                    //}
+                }
+            }
+        }
     }
 
     private void HandleMovementInputs()
     {
         if(Input.GetMouseButtonUp(1) && SelectionManager.Instance.SelectedUnits.Count > 0)
         {
-            if(Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, FloorLayers))
+            if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit _hitInfo, Mathf.Infinity, LayerMask.GetMask("Unit 2")))
+            {
+                return;
+            }
+
+            if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
                 foreach(SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
                 {
+                    //print("just move");
+                    print("JUSTMOVE: " + hitInfo.collider.gameObject);
                     unit.MoveTo(hitInfo.point);
                 }
             }
@@ -55,7 +104,7 @@ public class PlayerInput : MonoBehaviour
             SelectionBox.sizeDelta = Vector2.zero;
             SelectionBox.gameObject.SetActive(false);
 
-            if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, UnitLayers) && hitInfo.collider.TryGetComponent<SelectableUnit>(out SelectableUnit unit))
+            if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, UnitLayers) && hitInfo.collider.TryGetComponent<SelectableUnit>(out SelectableUnit unit))
             {
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {

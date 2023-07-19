@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -13,23 +16,22 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private LayerMask FloorLayers;
     [SerializeField] private float DragDelay = 0.1f;
 
+    // canvas scale 조정하기?
+    [SerializeField] private Canvas canvas;
+
     private float MouseDownTime;
     private Vector2 StartMousePosition;
-
-    // 임시 변수
-    Vector3 dist;
-    Vector3 _unit;
 
     private void Update()
     {
         HandleSelectionInputs();
         HandleMovementInputs();
-        TargetMove();
-
-        Debug.DrawRay(_unit, dist, Color.yellow);
+        StartCoroutine(TargetMove());
+        //TargetMove();
     }
 
-    private void TargetMove()
+    //private void TargetMove()
+    private IEnumerator TargetMove()
     {
         if (Input.GetMouseButtonUp(1) && SelectionManager.Instance.SelectedUnits.Count > 0)
         {
@@ -38,28 +40,20 @@ public class PlayerInput : MonoBehaviour
                 foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
                 {
                     Vector3 distance = hitInfo.point - unit.transform.position;
-                    dist = distance;
-                    print(distance);
+                    Vector3 rangedPosition = hitInfo.point - distance.normalized * unit.range;
 
-                    Vector3 rangedPosition = unit.transform.position + distance.normalized * unit.range;
-                    unit.MoveTo(distance);
+                    if (distance.magnitude > unit.range)
+                    {
+                        unit.MoveTo(rangedPosition);
 
-                    _unit = unit.transform.position;
+                        //yield return new WaitUntil(() => unit.Agent.remainingDistance < unit.Agent.stoppingDistance && !unit.Agent.hasPath && unit.Agent.velocity.sqrMagnitude == 0f);
+                        yield return new WaitUntil(() => unit.Agent.remainingDistance < unit.Agent.stoppingDistance && unit.Agent.velocity.sqrMagnitude == 0f);
 
+                        unit.Attack(hitInfo.point, distance.normalized);
+                    }
+
+                        
                     
-
-                    //print("target move out");
-
-                    //Debug.Log("Unit range " + unit.range + ", distance " + distance.magnitude + ", " + hitInfo.collider.gameObject);
-
-                    //if (unit.range < distance.magnitude)
-                    //{
-                    //    unit.MoveTo(distance.normalized * (distance.magnitude - unit.range));
-                    //    //print("target move in");
-                    //} else
-                    //{
-                    //    //print("target move else");
-                    //}
                 }
             }
         }
@@ -78,8 +72,6 @@ public class PlayerInput : MonoBehaviour
             {
                 foreach(SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
                 {
-                    //print("just move");
-                    print("JUSTMOVE: " + hitInfo.collider.gameObject);
                     unit.MoveTo(hitInfo.point);
                 }
             }
@@ -134,8 +126,9 @@ public class PlayerInput : MonoBehaviour
 
     private void ResizeSelectionBox()
     {
-        float width = Input.mousePosition.x - StartMousePosition.x;
+        float width = Input.mousePosition.x  - StartMousePosition.x;
         float height = Input.mousePosition.y - StartMousePosition.y;
+
 
         SelectionBox.anchoredPosition = StartMousePosition + new Vector2(width / 2, height / 2);
         SelectionBox.sizeDelta = new Vector2(Math.Abs(width), Mathf.Abs(height));

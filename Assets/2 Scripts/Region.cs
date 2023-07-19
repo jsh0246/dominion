@@ -43,7 +43,8 @@ public class Region : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
+        print("enter");
+        //print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
 
         if (other.CompareTag("Unit 1"))
         {
@@ -62,9 +63,14 @@ public class Region : MonoBehaviour
 
                     break;
                 case Possession.Unit_1P:
+                    // 1P->1P 변화없음
+                    // 처음으로 올라간녀석이었으면 게이지 업, 왜냐하면 상태에 변화가 생긴 것이므로?...(정확한 설명을 못함)
 
-                    StopAllCoroutines();
-                    up = StartCoroutine(SliderGaugeUp());
+                    if (OnRegionUnits1P.Count == 1)
+                    {
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                    }
 
                     break;
                 case Possession.Unit_2P:
@@ -87,8 +93,14 @@ public class Region : MonoBehaviour
 
                     // 여기서 상태 바꾸고 떨어뜨리는걸 해야 할듯
 
-                    StopAllCoroutines();
-                    down = StartCoroutine(SliderGaugeDown());
+                    if (OnRegionUnits2P.Count == 0)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    }
+
+                    //StopAllCoroutines();
+                    //down = StartCoroutine(SliderGaugeDown());
                     break;
             }
         } else if(other.CompareTag("Unit 2"))
@@ -116,17 +128,47 @@ public class Region : MonoBehaviour
 
                     break;
                 case Possession.Unit_2P:
+                    // 2P->2P 변화없음
 
-                    StopAllCoroutines();
-                    up = StartCoroutine(SliderGaugeUp());
+                    if (OnRegionUnits1P.Count == 1)
+                    {
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                    }
 
                     break;
                 case Possession.Unit_1C:
                     // 퍼센트 떨어뜨리면서 0이면 None으로
                     //Poss = Possession.Unit_2P;
+                    //if(OnRegionUnits1P.Count ==0)
+                    //{
+                    //    Poss = Possession.Unit_1P;
+                    //} else if(OnRegionUnits1P.Count > 0)
+                    //{
+                    //    Poss = Possession.Competing;
+                    //}
 
-                    StopAllCoroutines();
-                    down = StartCoroutine(SliderGaugeDown());
+                    // 1P가 있으면 1C 유지 게이지 다운 안함
+                    // 1P가 없으면 gauge down이지만 0까지는 1C유지, 0에 도착하면 2P로 변경
+
+                    print("쿠팡 플레이 에서");
+
+                    //if(OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
+                    //{
+
+                    //} else
+                    //{
+                    //    StopAllCoroutines();
+                    //    down = StartCoroutine(SliderGaugeDown());
+                    //}
+
+                    if(OnRegionUnits1P.Count == 0)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    }
+
+                    
                     break;
                 case Possession.Unit_2C:
                     
@@ -137,7 +179,8 @@ public class Region : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
+        print("exit");
+        //print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
 
         if (other.CompareTag("Unit 1"))
         {
@@ -178,10 +221,13 @@ public class Region : MonoBehaviour
             {
                 if (OnRegionUnits1P.Count > 0)
                 {
-                    Poss = Possession.Unit_1P;
+                    if (Poss != Possession.Unit_1C)
+                    {
+                        Poss = Possession.Unit_1P;
 
-                    StopAllCoroutines();
-                    up = StartCoroutine(SliderGaugeUp());
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                    }
                 }
                 else if (OnRegionUnits1P.Count == 0)
                 {
@@ -203,19 +249,19 @@ public class Region : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        print("STAy");
+
         if (Poss == Possession.None)
         {
             if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
             {
                 Poss = Possession.Unit_1P;
                 up = StartCoroutine(SliderGaugeUp());
-                print("Stay");
             }
             else if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
             {
                 Poss = Possession.Unit_2P;
                 up = StartCoroutine(SliderGaugeUp());
-                print("Stay");
             }
         }
     }
@@ -260,18 +306,39 @@ public class Region : MonoBehaviour
     {
         while (CapturingSlider.value > 0)
         {
+            //if(Poss == Possession.Unit_1C)
+            //{
+            //    Poss = Possession.Unit_1C;
+            //}
+
             CapturingSlider.value -= Time.deltaTime * 1000f;
             particles.SetActive(false);
 
             if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
             {
-                Poss = Possession.Unit_1P;
-            } else if(OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
+                if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
+                {
+                    Poss = Possession.Unit_1P;
+                }
+            }
+            else if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
             {
-                Poss = Possession.Unit_2P;
-            } else if(OnRegionUnits1P.Count > 9 && OnRegionUnits2P.Count > 0)
+                if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
+                {
+                    Poss = Possession.Unit_2P;
+                }
+            }
+            else if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
             {
-                Poss = Possession.Competing;
+                if (Poss == Possession.Unit_1C || Poss == Possession.Unit_2C)
+                {
+                    // 뭔가 나갔는데 1C이거나 2C이면 0이 될때까지 그 상태를 보존해준다. (점령했던것을 게이지가 0될때까지는 공로를 인정해준다)
+                    ;
+                }
+                else
+                {
+                    Poss = Possession.Competing;
+                }
             }
 
             if (CapturingSlider.value <= 0)

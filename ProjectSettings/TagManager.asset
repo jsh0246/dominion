@@ -9,7 +9,9 @@ TagManager:
   - Unit 1
   - Wall
   - Floor
-  - Bullet
+  - Unit 1 Bullet
+  - Unit 2 Bullet
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -22,14 +24,14 @@ TagManager:
   - Region
   - Unit 1
   - Unit 2
-  - Bullet
+  - Unit 1 Bullet
+  - Unit 2 Bullet
   - 
   - 
   - 
   - 
   - 
   - 
-  - Dummy
   - 
   - 
   - 

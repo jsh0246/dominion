@@ -8,23 +8,76 @@ using UnityEngine.UI;
 public class SelectableUnit : MonoBehaviour
 {
     public float range;
-
-    private NavMeshAgent Agent;
+    
     [SerializeField] private SpriteRenderer SelectionSprite;
     [SerializeField] private Texture2D attackCursor;
+    [SerializeField] private Transform bulletPosition;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private RectTransform healthBarGroup;
+    [SerializeField] private RectTransform healthBar;
 
+    public NavMeshAgent Agent;
+
+    private float attackDelay;
+    private float attackTime;
+    public int health;
+    private int maxHealth;
+
+
+    private Vector3 d;
 
     private void Awake()
     {
-        range = 20f;
-
+        range = 10f;
         SelectionManager.Instance.AvailableUnits.Add(this);
         Agent = GetComponent<NavMeshAgent>();
+
+        maxHealth = health = 30;
+        attackTime = attackDelay = 2f;
     }
 
-    public void MoveTo(Vector3 Position)
+    private void Update()
     {
-        Agent.SetDestination(Position);
+        Debug.DrawRay(transform.position, d * 5, Color.yellow);
+
+        AttackTimer();
+    }
+
+    private void AttackTimer()
+    {
+        attackTime += Time.deltaTime;
+    }
+
+    public void Attack(Vector3 target, Vector3 dir)
+    {
+        //GameObject instantBullet = Instantiate(bullet, bulletPosition.position, bullet.transform.rotation);
+        //GameObject instantBullet = Instantiate(bullet, bulletPosition.position, bullet.transform.rotation * Quaternion.Euler(dir.x, 0, dir.z));
+        //GameObject instantBullet = Instantiate(bullet, transform.position + dir * 2, bullet.transform.rotation * Quaternion.LookRotation(dir));
+
+        //attackTime += Time.deltaTime;
+        if (attackTime > attackDelay)
+        {
+            GameObject instantBullet = Instantiate(bullet, transform.position + dir * 2, Quaternion.LookRotation(dir));
+            instantBullet.transform.rotation.SetLookRotation(dir);
+
+
+
+            Rigidbody bulletRigidbody = instantBullet.GetComponent<Rigidbody>();
+
+            bulletRigidbody.AddForce(new Vector3(dir.x, 0, dir.z) * 20f, ForceMode.Impulse);
+            //bulletRigidbody.velocity = new Vector3(dir.x, 0, dir.z) * 20f;
+            //bulletRigidbody.AddForce(target, ForceMode.Impulse);
+
+            d = dir;
+
+            attackTime = 0f;
+        }
+
+    }
+
+    public bool MoveTo(Vector3 Position)
+    {
+        return Agent.SetDestination(Position);
     }
 
     public void Onselected()
@@ -48,5 +101,29 @@ public class SelectableUnit : MonoBehaviour
     private void OnMouseExit()
     {
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Unit 1 Bullet")) {
+            Bullet bullet = other.GetComponent<Bullet>();
+            health -= bullet.damage;
+
+            // 위에 체력표 바꾸기
+            // 체력 감소 애니메이션
+            // 체력 회복 방법?
+            if (health < maxHealth)
+            {
+                healthBarGroup.gameObject.SetActive(true);
+                healthBar.localScale = new Vector3((health / (float)maxHealth), 1, 1);
+            }
+
+            Destroy(other.gameObject);
+
+            if(health <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }

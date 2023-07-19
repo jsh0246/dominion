@@ -3645,7 +3645,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11455738, guid: 407bd5cbe8c43334bb1b25c0f3826974, type: 3}
       propertyPath: lastTab
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11455738, guid: 407bd5cbe8c43334bb1b25c0f3826974, type: 3}
       propertyPath: limitMap
@@ -5645,18 +5645,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SW
       objectReference: {fileID: 0}
-    - target: {fileID: 1633166137992678931, guid: 60c8e702d96e6384f89c18b2e5959ae5, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 1857997113681673104, guid: 60c8e702d96e6384f89c18b2e5959ae5, type: 3}
       propertyPath: CapturingSlider
       value: 
       objectReference: {fileID: 312459409}
-    - target: {fileID: 3437269304232535785, guid: 60c8e702d96e6384f89c18b2e5959ae5, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

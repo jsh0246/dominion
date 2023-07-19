@@ -151,7 +151,6 @@ public class Region : MonoBehaviour
                     // 1P가 있으면 1C 유지 게이지 다운 안함
                     // 1P가 없으면 gauge down이지만 0까지는 1C유지, 0에 도착하면 2P로 변경
 
-                    print("쿠팡 플레이 에서");
 
                     //if(OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
                     //{
@@ -217,8 +216,11 @@ public class Region : MonoBehaviour
         {
             OnRegionUnits2P.Remove(other.gameObject.GetComponent<SelectableUnit>());
 
+            // 여기도 이상해
+            // 2P가 나갔는데
             if (OnRegionUnits2P.Count == 0)
             {
+                // 1P가 남아있다
                 if (OnRegionUnits1P.Count > 0)
                 {
                     if (Poss != Possession.Unit_1C)
@@ -239,6 +241,10 @@ public class Region : MonoBehaviour
                     }
                     else
                     {
+                        // 아래 구현할것
+                        // 1P가 없을때 2P가 나갔는데 중간에 나간거라면
+                        // 1C 였을때 현상유지
+                        // 2P 였을때 다시 떨어짐
                         StopAllCoroutines();
                         down = StartCoroutine(SliderGaugeDown());
                     }

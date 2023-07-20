@@ -9,7 +9,8 @@ using static UnityEditor.ShaderData;
 
 public class Region : MonoBehaviour
 {
-    private enum Possession { None, Competing, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
+    //private enum Possession { None, Competing, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
+    private enum Possession { None, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
 
     [SerializeField] private Slider CapturingSlider;
     [SerializeField] Possession Poss;
@@ -59,9 +60,13 @@ public class Region : MonoBehaviour
                     up = StartCoroutine(SliderGaugeUp());
 
                     break;
-                case Possession.Competing:
+                //case Possession.Competing:
+                //    if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
+                //    {
+                //        Poss = Possession.Unit_1P;
+                //    }
 
-                    break;
+                //    break;
                 case Possession.Unit_1P:
                     // 1P->1P 변화없음
                     // 처음으로 올라간녀석이었으면 게이지 업, 왜냐하면 상태에 변화가 생긴 것이므로?...(정확한 설명을 못함)
@@ -75,13 +80,39 @@ public class Region : MonoBehaviour
                     break;
                 case Possession.Unit_2P:
 
+                    // 뒤조건 따닥방지
+                    if (OnRegionUnits2P.Count == 0 && OnRegionUnits1P.Count == 1)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    }
+                    else if (OnRegionUnits2P.Count > 0)
+                    {
+                        StopAllCoroutines();
+                    }
 
-                    Poss = Possession.Competing;
-                    StopAllCoroutines();
+                    //Poss = Possession.Competing;
+
                     break;
 
                 case Possession.Unit_1C:
+                    // 1P만 있으면 상태변경없이 up
+                    // 1p 2p 있으면 퍼센트 멈추기만 함, 100프로까지 점령한 어드밴티지를 줌
+
+                    if(OnRegionUnits1P.Count == 1 && OnRegionUnits2P.Count == 0)
+                    {
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                    } else if(OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
+                    {
+                        StopAllCoroutines();
+                    }
+
+
+
                     // 점수 업
+
+                    
 
 
                     break;
@@ -93,7 +124,14 @@ public class Region : MonoBehaviour
 
                     // 여기서 상태 바꾸고 떨어뜨리는걸 해야 할듯
 
-                    if (OnRegionUnits2P.Count == 0)
+
+                    /* ------------------------- 따닥방지 설명  ------------------------ */
+                    // 두번째 OnRegionUnits1P.Count == 1의 조건삽입의 이유는 따닥방지임
+                    // 맨 처음으로 들어오는 2P에만 발동하고 따라 들어오는 2P에는 발동하지 않도록 하기 위함임
+                    // 주석을 못넣을수도 있는데 Region.cs의 ==1 조건삽입의 이유는 따닥방지 이유임
+                    /* ------------------------- 따닥방지 설명  ------------------------ */
+
+                    if (OnRegionUnits2P.Count == 0 && OnRegionUnits1P.Count == 1)
                     {
                         StopAllCoroutines();
                         down = StartCoroutine(SliderGaugeDown());
@@ -116,15 +154,24 @@ public class Region : MonoBehaviour
                     up = StartCoroutine(SliderGaugeUp());
 
                     break;
-                case Possession.Competing:
+                //case Possession.Competing:
+                //    if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
+                //    {
+                //        Poss = Possession.Unit_2P;
+                //    }
 
-                    
 
-                    break;
+                //    break;
                 case Possession.Unit_1P:
 
-                    Poss = Possession.Competing;
-                    StopAllCoroutines();
+                    if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count == 1)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    } else if(OnRegionUnits1P.Count > 0)
+                    {
+                        StopAllCoroutines();
+                    }
 
                     break;
                 case Possession.Unit_2P:
@@ -170,7 +217,19 @@ public class Region : MonoBehaviour
                     
                     break;
                 case Possession.Unit_2C:
-                    
+
+                    // 위의 1C와 내용 동일
+
+                    if (OnRegionUnits2P.Count == 1 && OnRegionUnits1P.Count == 0)
+                    {
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                    }
+                    else if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
+                    {
+                        StopAllCoroutines();
+                    }
+
                     break;
             }
         }
@@ -191,20 +250,78 @@ public class Region : MonoBehaviour
                 // 2P가 남아있다
                 if (OnRegionUnits2P.Count > 0)
                 {
-                    Poss = Possession.Unit_2P;
+                    //if(Poss == Possession.Competing)
+                    //{
+                    //    Poss = Possession.Unit_2P;
 
-                    StopAllCoroutines();
-                    up = StartCoroutine(SliderGaugeUp());
-                
-                // 2P가 남아있지 않다. 아무도 없다
+                    //    StopAllCoroutines();
+                    //    up = StartCoroutine(SliderGaugeUp());
+                    //}
+
+                    // 1P가 나갈때 1C 상태였다면 게이지는 내리지만 0까지는 1C유지해준다
+                    //if (Poss == Possession.Unit_1C)
+                    //{
+                    //    StopAllCoroutines();
+                    //    down = StartCoroutine(SliderGaugeDown());
+                    //} 
+
+                    //if(Poss != Possession.Unit_2C)
+                    //{
+                    //    Poss = Possession.Unit_2P;
+
+                    //    StopAllCoroutines();
+                    //    down = StartCoroutine(SliderGaugeDown());
+                    //} else if(Poss == Possession.Unit_2C)
+                    //{
+                    //    ;
+                    //}
+
+                    //Poss = Possession.Unit_2P;
+
+                    //StopAllCoroutines();
+                    //up = StartCoroutine(SliderGaugeUp());
+
+
+                    if (Poss == Possession.Unit_1P)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    }
+                    else if (Poss == Possession.Unit_2P)
+                    {
+                        // 올라가는중에 1이 들어왔다 빠르게 나갔다고 하면 따닥 같이 슬라이더 한틱이 즉시 상승한다
+                        // 이어서 부드럽게 상승하는 방법? +10이 아니고 세세하게 올리면 되려나? 따닥은 불완전함
+                        StopAllCoroutines();
+                        up = StartCoroutine(SliderGaugeUp());
+                        //down = StartCoroutine(SliderGaugeDown());
+                    }
+                    else if (Poss == Possession.Unit_1C)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    }
+                    else if (Poss == Possession.Unit_2C)
+                    {
+                        ;
+                    }
+
+
+
+                    // 2P가 남아있지 않다. 아무도 없다
                 } else if(OnRegionUnits2P.Count  == 0)
                 {
                     // 1P가 100 채우고 나갔다
-                    if(Poss == Possession.Unit_1C)
+                    if (Poss == Possession.Unit_1C)
                     {
+                    }
+                    // 1이 2C상태에서 나갔다
+                    else if(Poss == Possession.Unit_2C)
+                    {
+                        StopAllCoroutines();
+                    }
 
                     // 1P 가 중간에 나갔다
-                    } else
+                    else
                     {
                         StopAllCoroutines();
                         down = StartCoroutine(SliderGaugeDown());
@@ -223,22 +340,48 @@ public class Region : MonoBehaviour
                 // 1P가 남아있다
                 if (OnRegionUnits1P.Count > 0)
                 {
-                    if (Poss != Possession.Unit_1C)
-                    {
-                        Poss = Possession.Unit_1P;
 
+                    //if (Poss == Possession.Competing)
+                    //{
+                    //    Poss = Possession.Unit_1P;
+
+                    //    StopAllCoroutines();
+                    //    up = StartCoroutine(SliderGaugeUp());
+                    //}
+
+                    // 2P가 나갈때 2C상태였다면 게이지는 내리지만 0까지는 2C유지해준다
+
+                    if(Poss == Possession.Unit_1P)
+                    {
                         StopAllCoroutines();
                         up = StartCoroutine(SliderGaugeUp());
+                    } else if(Poss == Possession.Unit_2P)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
+                    } else if(Poss == Possession.Unit_1C)
+                    {
+                        ;
+                    } else if(Poss == Possession.Unit_2C)
+                    {
+                        StopAllCoroutines();
+                        down = StartCoroutine(SliderGaugeDown());
                     }
                 }
                 else if (OnRegionUnits1P.Count == 0)
                 {
+
+                    // 2가 1C상태에서 나갔다
+                    if(Poss == Possession.Unit_1C)
+                    {
+                        StopAllCoroutines();
+                    }
                     // 2P가 100 채우고 나갔다
-                    if (Poss == Possession.Unit_2C)
+                    else if (Poss == Possession.Unit_2C)
                     {
 
-                    // 2P 가 중간에 나갔다
                     }
+                    // 2P 가 중간에 나갔다
                     else
                     {
                         // 아래 구현할것
@@ -280,6 +423,7 @@ public class Region : MonoBehaviour
         {
             CapturingSlider.value += Time.deltaTime * 1000f;
 
+            // 점령 표시 활성화
             if(CapturingSlider.value >= 100)
             {
                 if (Poss == Possession.Unit_1P)
@@ -318,39 +462,43 @@ public class Region : MonoBehaviour
             //}
 
             CapturingSlider.value -= Time.deltaTime * 1000f;
-            particles.SetActive(false);
+            // 1C 2C 상태에서는 0이 됐을때 파티클을 지워보자
+            // 아직 점수는 올라가니까 바로 지우지 않는것
+            // 아래 SetActive()는 바로 지우는것
+            //particles.SetActive(false);
 
-            if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
-            {
-                if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
-                {
-                    Poss = Possession.Unit_1P;
-                }
-            }
-            else if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
-            {
-                if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
-                {
-                    Poss = Possession.Unit_2P;
-                }
-            }
-            else if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
-            {
-                if (Poss == Possession.Unit_1C || Poss == Possession.Unit_2C)
-                {
-                    // 뭔가 나갔는데 1C이거나 2C이면 0이 될때까지 그 상태를 보존해준다. (점령했던것을 게이지가 0될때까지는 공로를 인정해준다)
-                    ;
-                }
-                else
-                {
-                    Poss = Possession.Competing;
-                }
-            }
+            //if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count == 0)
+            //{
+            //    if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
+            //    {
+            //        Poss = Possession.Unit_1P;
+            //    }
+            //}
+            //else if (OnRegionUnits1P.Count == 0 && OnRegionUnits2P.Count > 0)
+            //{
+            //    if (Poss != Possession.Unit_1C && Poss != Possession.Unit_2C)
+            //    {
+            //        Poss = Possession.Unit_2P;
+            //    }
+            //}
+            //else if (OnRegionUnits1P.Count > 0 && OnRegionUnits2P.Count > 0)
+            //{
+            //    if (Poss == Possession.Unit_1C || Poss == Possession.Unit_2C)
+            //    {
+            //        // 뭔가 나갔는데 1C이거나 2C이면 0이 될때까지 그 상태를 보존해준다. (점령했던것을 게이지가 0될때까지는 공로를 인정해준다)
+            //        ;
+            //    }
+            //    else
+            //    {
+            //        //Poss = Possession.Competing;
+            //    }
+            //}
 
             if (CapturingSlider.value <= 0)
             {
+                particles.SetActive(false);
                 Poss = Possession.None;
-
+                
                 //yield return null;
                 break;
             }

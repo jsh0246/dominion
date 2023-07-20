@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -105,7 +106,7 @@ public class SelectableUnit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Unit 1 Bullet")) {
+        if(other.CompareTag("Unit 1 Bullet") && (gameObject.name.CompareTo("Player 2") == 0 || gameObject.name.CompareTo("Player 2(Clone)") == 0)) {
             Bullet bullet = other.GetComponent<Bullet>();
             health -= bullet.damage;
 
@@ -122,7 +123,19 @@ public class SelectableUnit : MonoBehaviour
 
             if(health <= 0)
             {
-                Destroy(gameObject);
+
+
+                SelectionManager.Instance.AvailableUnits.Remove(this);
+
+
+                // OntriggerExit() 를 직접 부르는 걸 어떻게 하지
+                // 임시방편 처리함
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                gameObject.transform.Translate(new Vector3(1000f, 1000f, 1000f));
+
+
+
+                Destroy(gameObject, 0.1f);
             }
         }
     }

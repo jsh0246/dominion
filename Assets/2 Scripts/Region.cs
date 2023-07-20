@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.ShaderData;
 
 public class Region : MonoBehaviour
 {
+    public int regionNumber;
+    // Competing은 필요없고 더 복잡하게 만드는거 같아서 없앰
     //private enum Possession { None, Competing, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
     private enum Possession { None, Unit_1P, Unit_2P, Unit_1C, Unit_2C };
 
@@ -44,7 +42,7 @@ public class Region : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("enter");
+        //print("enter");
         //print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
 
         if (other.CompareTag("Unit 1"))
@@ -237,7 +235,7 @@ public class Region : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print("exit");
+        //print("exit");
         //print(OnRegionUnits1P.Count + " " + OnRegionUnits2P.Count);
 
         if (other.CompareTag("Unit 1"))
@@ -398,7 +396,7 @@ public class Region : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        print("STAy");
+        //print("STAy");
 
         if (Poss == Possession.None)
         {

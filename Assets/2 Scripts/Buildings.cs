@@ -1,15 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-//using UnityEngine.UIElements;
 using UnityEngine.UI;
-using UnityEditor;
-using static Unity.VisualScripting.Metadata;
-using TMPro;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class Buildings : MonoBehaviour
 {

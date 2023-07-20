@@ -14,6 +14,8 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ScoreText1P;
     [SerializeField] private TextMeshProUGUI ScoreText2P;
     [SerializeField] private Region[] region;
+    [SerializeField] private TextMeshProUGUI regionCapture1P;
+    [SerializeField] private TextMeshProUGUI regionCapture2P;
 
     private void Start()
     {
@@ -28,6 +30,9 @@ public class ScoreManager : MonoBehaviour
     {
         CheckStatus();
         Cal();
+
+        regionCapture1P.text = CapturingNum1P.ToString();
+        regionCapture2P.text = CapturingNum2P.ToString();
     }
 
     private void Cal()

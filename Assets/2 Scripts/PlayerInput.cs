@@ -74,6 +74,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    // Shift 키를 누르고 여러개를 한번에 계속 선택은 안되는듯, 구현하기
     private void HandleSelectionInputs()
     {
         if (Input.GetMouseButtonDown(0))

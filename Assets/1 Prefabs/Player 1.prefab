@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d9e7a438f674545bec246784ff9aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 5
+  range: 10
   SelectionSprite: {fileID: 1087837745061958610}
   attackCursor: {fileID: 0}
   bulletPosition: {fileID: 3889494106740653809}

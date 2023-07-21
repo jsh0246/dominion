@@ -34,6 +34,7 @@ public class PlayerInput : MonoBehaviour
             {
                 foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
                 {
+                   
                     Vector3 distance = hitInfo.point - unit.transform.position;
                     Vector3 rangedPosition = hitInfo.point - distance.normalized * unit.range;
 

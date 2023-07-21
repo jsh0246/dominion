@@ -29,7 +29,7 @@ public class SelectableUnit : MonoBehaviour
 
     private void Awake()
     {
-        range = 10f;
+        //range = 10f;
         SelectionManager.Instance.AvailableUnits.Add(this);
         Agent = GetComponent<NavMeshAgent>();
 
@@ -61,8 +61,6 @@ public class SelectableUnit : MonoBehaviour
             GameObject instantBullet = Instantiate(bullet, transform.position + dir * 2, Quaternion.LookRotation(dir));
             instantBullet.transform.rotation.SetLookRotation(dir);
 
-
-
             Rigidbody bulletRigidbody = instantBullet.GetComponent<Rigidbody>();
 
             bulletRigidbody.AddForce(new Vector3(dir.x, 0, dir.z) * 20f, ForceMode.Impulse);
@@ -72,6 +70,8 @@ public class SelectableUnit : MonoBehaviour
             d = dir;
 
             attackTime = 0f;
+
+            print("ATTACK");
         }
 
     }

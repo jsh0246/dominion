@@ -125,9 +125,9 @@ public class EnemyAgent : MonoBehaviour
             {
                 var items = from pair in _dist[i] orderby pair.Value ascending select pair;
 
-                foreach(KeyValuePair<int, float> pair in items) {
-                    print(pair.Key + " " + pair.Value);
-                }
+                //foreach(KeyValuePair<int, float> pair in items) {
+                //    print(pair.Key + " " + pair.Value);
+                //}
             }
 
         }

@@ -70,8 +70,6 @@ public class SelectableUnit : MonoBehaviour
             d = dir;
 
             attackTime = 0f;
-
-            print("ATTACK");
         }
 
     }

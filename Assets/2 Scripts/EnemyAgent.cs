@@ -8,7 +8,7 @@ public class EnemyAgent : MonoBehaviour
     private List<Dictionary<int, float>[]> dist;
     //
     private List<Dictionary<int, float>> _dist;
-    private float[] regionPower;
+    private float[] regionInfluence;
 
     private float refreshDelay = 5f;
     private float time;
@@ -23,7 +23,7 @@ public class EnemyAgent : MonoBehaviour
         regionList = GameObject.FindGameObjectsWithTag("Region");
         dist = new List<Dictionary<int, float>[]>();
         _dist = new List<Dictionary<int, float>>();
-        regionPower = new float[regionList.Length];
+        regionInfluence = new float[regionList.Length];
 
         /* 복잡한 자료구조의 확장 연습 
         m = new List<int>();
@@ -52,7 +52,7 @@ public class EnemyAgent : MonoBehaviour
     //    print(regionList[i].GetComponent<Region>().regionNumber);
     //}
         GetList();
-        CalculateDistance();
+        //CalculateDistance();
         CalDist();
         DistanceToRegionAscOrder();
     }
@@ -77,7 +77,8 @@ public class EnemyAgent : MonoBehaviour
 
     private void CalculateDistance()
     {
-        
+
+
         for(int i=0; i<playerList.Length; i++)
         {
             dist.Add(new Dictionary<int, float>[5]);
@@ -99,10 +100,19 @@ public class EnemyAgent : MonoBehaviour
 
     private void CalDist()
     {
+        //Dictionary<int, float> d = new Dictionary<int, float>();
+        //d.Add(5, 5f);
+
+
+        //List<Dictionary<int, float>> dic = new List<Dictionary<int, float>>();
+        //dic.Add(new Dictionary<int, float>());
+        //dic[0].Add(5, 5f);
+
+
+        _dist.Add(new Dictionary<int, float>(playerList.Length));
 
         for (int i = 0; i < playerList.Length; i++)
         {
-            _dist.Add(new Dictionary<int, float>(regionList.Length));
             for (int j = 0; j < regionList.Length; j++)
             {
                 _dist[i].Add(j, Dist(playerList[i], regionList[j]));
@@ -119,19 +129,40 @@ public class EnemyAgent : MonoBehaviour
 
     private void DistanceToRegionAscOrder()
     {
-        for(int i=0; i<_dist.Count; i++)
+        //for(int i=0; i<_dist.Count; i++)
+        //{
+        //    for (int j=0; j < _dist[i].Count; j++)
+        //    {
+        //        var items = from pair in _dist[i] orderby pair.Value ascending select pair;
+
+        //        foreach (KeyValuePair<int, float> pair in items)
+        //        {
+        //            print(pair.Key + " " + pair.Value);
+        //        }
+        //    }
+
+        //}
+
+        for (int i = 0; i < _dist.Count; i++)
         {
-            for (int j=0; j < _dist[i].Count; j++)
-            {
-                var items = from pair in _dist[i] orderby pair.Value ascending select pair;
+            var items = from pair in _dist[i] orderby pair.Value ascending select pair;
 
-                //foreach(KeyValuePair<int, float> pair in items) {
-                //    print(pair.Key + " " + pair.Value);
-                //}
-            }
-
+            //foreach (KeyValuePair<int, float> pair in items)
+            //{
+            //    print(pair.Key + " " + pair.Value);
+            //}
         }
     }
+
+    private void RegionInfluenceByPlayer()
+    {
+        //for(int i=0; i<regionList.Length; i++)
+        //{
+        //    for(int j=0; j<)
+        //}
+    }
+
+
 
     private float Dist(GameObject a, GameObject b)
     {

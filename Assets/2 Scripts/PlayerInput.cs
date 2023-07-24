@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerInput : MonoBehaviour
 
     // canvas scale 조정하기?
     [SerializeField] private Canvas canvas;
+    
 
     private float MouseDownTime;
     private Vector2 StartMousePosition;
@@ -66,11 +68,58 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
-                foreach(SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
+                if(Formation)
                 {
-                    unit.MoveTo(hitInfo.point);
+
                 }
+                //foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
+                //{
+                //    unit.MoveTo(hitInfo.point);
+
+
+
+                //}
+
+
+                Formation(hitInfo.point);
             }
+        }
+    }
+
+    private void Formation(Vector3 point)
+    {
+        int unitCount = SelectionManager.Instance.SelectedUnits.Count;
+        int root = (int)Mathf.Sqrt(unitCount);
+        int rest = unitCount - root * root;
+
+        HashSet<SelectableUnit> units = SelectionManager.Instance.SelectedUnits;
+        List<Vector3> format = new List<Vector3>();
+
+
+        for (int i = 0; i < root; i++)
+        {
+            for (int j = 0; j < root; j++)
+            {
+                format.Add(point + new Vector3(j * 3, 0, i * 3));
+            }
+        }
+
+        for (int i=0; i<rest; i++)
+        {
+            format.Add(point + new Vector3(root*3, 0, i * 3));
+
+            if (format.Count == unitCount)
+                break;
+            format.Add(point + new Vector3(i * 3, 0, root*3));
+
+            if (format.Count == unitCount)
+                break;
+        }
+
+        int index = 0;
+        foreach (SelectableUnit unit in units)
+        {
+            unit.MoveTo(format[index++]);
         }
     }
 

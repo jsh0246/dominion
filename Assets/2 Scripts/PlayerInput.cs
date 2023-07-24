@@ -14,6 +14,7 @@ public class PlayerInput : MonoBehaviour
 
     // canvas scale 조정하기?
     [SerializeField] private Canvas canvas;
+    
 
     private float MouseDownTime;
     private Vector2 StartMousePosition;
@@ -67,6 +68,10 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
+                if(Formation)
+                {
+
+                }
                 //foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
                 //{
                 //    unit.MoveTo(hitInfo.point);
@@ -99,37 +104,17 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        print(rest);
-
-        int col;
-
-        if (rest >= 2)
-            col = rest / 2;
-        else
-            col = rest;
-
-
-        for (int i=0; i<col; i++)
+        for (int i=0; i<rest; i++)
         {
             format.Add(point + new Vector3(root*3, 0, i * 3));
 
-            if (rest-- == 0)
+            if (format.Count == unitCount)
                 break;
-
             format.Add(point + new Vector3(i * 3, 0, root*3));
 
-            if (rest-- == 0)
+            if (format.Count == unitCount)
                 break;
         }
-
-        //int k;
-        //for (k = rest; k < root-1; k++)
-        //{
-        //    format.Add(point + new Vector3(root * 3, 0, k * 3));
-        //}
-
-        print(format.Count + " " + unitCount);
-
 
         int index = 0;
         foreach (SelectableUnit unit in units)

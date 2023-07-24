@@ -14,10 +14,16 @@ public class PlayerInput : MonoBehaviour
 
     // canvas scale 조정하기?
     [SerializeField] private Canvas canvas;
-    
 
+    private CanvasManager canvasManager;
     private float MouseDownTime;
     private Vector2 StartMousePosition;
+
+    private void Start()
+    {
+        // 최적으로 찾는 방법?
+        canvasManager = GameObject.FindObjectOfType<CanvasManager>();
+    }
 
     private void Update()
     {
@@ -68,25 +74,29 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
-                if(Formation)
+                print(canvasManager.isOrdered);
+
+                if (canvasManager.isOrdered)
                 {
-
+                    MoveOrdered(hitInfo.point);
                 }
-                //foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
-                //{
-                //    unit.MoveTo(hitInfo.point);
-
-
-
-                //}
-
-
-                Formation(hitInfo.point);
+                else
+                {
+                    MoveUnordered(hitInfo.point);
+                }            
             }
         }
     }
 
-    private void Formation(Vector3 point)
+    private void MoveUnordered(Vector3 point)
+    {
+        foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
+        {
+            unit.MoveTo(point);
+        }
+    }
+
+    private void MoveOrdered(Vector3 point)
     {
         int unitCount = SelectionManager.Instance.SelectedUnits.Count;
         int root = (int)Mathf.Sqrt(unitCount);

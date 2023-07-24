@@ -10,7 +10,7 @@ public class UnitGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UnitRandomGenerator();
+        RandomUnitGenerator();
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class UnitGenerator : MonoBehaviour
         
     }
 
-    private void UnitRandomGenerator()
+    private void RandomUnitGenerator()
     {
         for(int i=0; i< num1; i++)
         {

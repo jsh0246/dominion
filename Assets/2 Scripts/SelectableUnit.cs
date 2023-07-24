@@ -8,6 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class SelectableUnit : MonoBehaviour
 {
+    public NavMeshAgent Agent;
     public float range;
     
     [SerializeField] private SpriteRenderer SelectionSprite;
@@ -16,8 +17,6 @@ public class SelectableUnit : MonoBehaviour
     [SerializeField] private GameObject bullet;
     [SerializeField] private RectTransform healthBarGroup;
     [SerializeField] private RectTransform healthBar;
-
-    public NavMeshAgent Agent;
 
     private float attackDelay;
     private float attackTime;

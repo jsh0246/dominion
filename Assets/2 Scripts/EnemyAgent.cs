@@ -53,7 +53,7 @@ public class EnemyAgent : MonoBehaviour
     //}
         GetList();
         //CalculateDistance();
-        CalDist();
+        //CalDist();
         DistanceToRegionAscOrder();
     }
 
@@ -98,6 +98,7 @@ public class EnemyAgent : MonoBehaviour
         }
     }
 
+    // 주석처리함
     private void CalDist()
     {
         //Dictionary<int, float> d = new Dictionary<int, float>();

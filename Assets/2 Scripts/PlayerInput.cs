@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -66,11 +67,74 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
-                foreach(SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
-                {
-                    unit.MoveTo(hitInfo.point);
-                }
+                //foreach (SelectableUnit unit in SelectionManager.Instance.SelectedUnits)
+                //{
+                //    unit.MoveTo(hitInfo.point);
+
+
+
+                //}
+
+
+                Formation(hitInfo.point);
             }
+        }
+    }
+
+    private void Formation(Vector3 point)
+    {
+        int unitCount = SelectionManager.Instance.SelectedUnits.Count;
+        int root = (int)Mathf.Sqrt(unitCount);
+        int rest = unitCount - root * root;
+
+        HashSet<SelectableUnit> units = SelectionManager.Instance.SelectedUnits;
+        List<Vector3> format = new List<Vector3>();
+
+
+        for (int i = 0; i < root; i++)
+        {
+            for (int j = 0; j < root; j++)
+            {
+                format.Add(point + new Vector3(j * 3, 0, i * 3));
+            }
+        }
+
+        print(rest);
+
+        int col;
+
+        if (rest >= 2)
+            col = rest / 2;
+        else
+            col = rest;
+
+
+        for (int i=0; i<col; i++)
+        {
+            format.Add(point + new Vector3(root*3, 0, i * 3));
+
+            if (rest-- == 0)
+                break;
+
+            format.Add(point + new Vector3(i * 3, 0, root*3));
+
+            if (rest-- == 0)
+                break;
+        }
+
+        //int k;
+        //for (k = rest; k < root-1; k++)
+        //{
+        //    format.Add(point + new Vector3(root * 3, 0, k * 3));
+        //}
+
+        print(format.Count + " " + unitCount);
+
+
+        int index = 0;
+        foreach (SelectableUnit unit in units)
+        {
+            unit.MoveTo(format[index++]);
         }
     }
 

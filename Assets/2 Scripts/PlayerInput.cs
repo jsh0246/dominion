@@ -74,8 +74,6 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(Camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hitInfo, Mathf.Infinity, FloorLayers))
             {
-                print(canvasManager.isOrdered);
-
                 if (canvasManager.isOrdered)
                 {
                     MoveOrdered(hitInfo.point);
@@ -105,22 +103,24 @@ public class PlayerInput : MonoBehaviour
         HashSet<SelectableUnit> units = SelectionManager.Instance.SelectedUnits;
         List<Vector3> format = new List<Vector3>();
 
+        print(unitCount);
+
 
         for (int i = 0; i < root; i++)
         {
             for (int j = 0; j < root; j++)
             {
-                format.Add(point + new Vector3(j * 3, 0, i * 3));
+                format.Add(point + new Vector3(j * 4, 0, i * 4));
             }
         }
 
         for (int i=0; i<rest; i++)
         {
-            format.Add(point + new Vector3(root*3, 0, i * 3));
+            format.Add(point + new Vector3(root*4, 0, i * 4));
 
             if (format.Count == unitCount)
                 break;
-            format.Add(point + new Vector3(i * 3, 0, root*3));
+            format.Add(point + new Vector3(i * 4, 0, root*4));
 
             if (format.Count == unitCount)
                 break;

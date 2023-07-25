@@ -10,11 +10,12 @@ public class SelectableUnit : MonoBehaviour
 {
     public NavMeshAgent Agent;
     public float range;
-    
+
+    public GameObject bullet;
+
     [SerializeField] private SpriteRenderer SelectionSprite;
     [SerializeField] private Texture2D attackCursor;
     [SerializeField] private Transform bulletPosition;
-    [SerializeField] private GameObject bullet;
     [SerializeField] private RectTransform healthBarGroup;
     [SerializeField] private RectTransform healthBar;
 

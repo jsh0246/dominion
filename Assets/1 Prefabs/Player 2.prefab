@@ -225,7 +225,7 @@ Transform:
   - {fileID: 2259709205110764553}
   - {fileID: 135797252209675949}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1318947954433374962
 MeshFilter:
@@ -341,7 +341,7 @@ NavMeshAgent:
   m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 4
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -361,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d9e7a438f674545bec246784ff9aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Agent: {fileID: 0}
   range: 20
   SelectionSprite: {fileID: 7417453139320636731}
   attackCursor: {fileID: 2800000, guid: 24d21e256b498a944a00e2527ed7618c, type: 3}
@@ -368,7 +369,6 @@ MonoBehaviour:
   bullet: {fileID: 4744045939131707175, guid: b56f1b5cd2588f044b830b7bdc9d47c5, type: 3}
   healthBarGroup: {fileID: 2259709205110764553}
   healthBar: {fileID: 7820029373100663707}
-  Agent: {fileID: 0}
   health: 0
 --- !u!1 &1943613270531338462
 GameObject:

@@ -784,7 +784,7 @@ NavMeshAgent:
   m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 4
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -804,14 +804,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d9e7a438f674545bec246784ff9aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Agent: {fileID: 8726865124966342574}
   range: 20
+  bullet: {fileID: 4744045939131707175, guid: 83b9dd1f7d5313944b42583097419dc8, type: 3}
   SelectionSprite: {fileID: 8746637436137553546}
   attackCursor: {fileID: 2800000, guid: 24d21e256b498a944a00e2527ed7618c, type: 3}
   bulletPosition: {fileID: 8165917048888500740}
-  bullet: {fileID: 4744045939131707175, guid: 83b9dd1f7d5313944b42583097419dc8, type: 3}
   healthBarGroup: {fileID: 7700203201174828574}
   healthBar: {fileID: 7906264528726758709}
-  Agent: {fileID: 8726865124966342574}
   health: 0
 --- !u!1 &6569414287956627419
 GameObject:

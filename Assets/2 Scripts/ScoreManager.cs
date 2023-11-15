@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviour
         CapturingNum2P = 0;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         CheckStatus();
         Cal();

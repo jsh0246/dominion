@@ -250,14 +250,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d9e7a438f674545bec246784ff9aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Agent: {fileID: 0}
   range: 10
+  bullet: {fileID: 4744045939131707175, guid: 83b9dd1f7d5313944b42583097419dc8, type: 3}
   SelectionSprite: {fileID: 1087837745061958610}
   attackCursor: {fileID: 0}
   bulletPosition: {fileID: 3889494106740653809}
-  bullet: {fileID: 4744045939131707175, guid: 83b9dd1f7d5313944b42583097419dc8, type: 3}
   healthBarGroup: {fileID: 5011872407204830711}
   healthBar: {fileID: 4262422932023220436}
-  Agent: {fileID: 0}
   health: 0
 --- !u!1 &3878491940843892536
 GameObject:

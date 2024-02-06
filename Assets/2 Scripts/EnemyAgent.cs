@@ -24,7 +24,7 @@ public class EnemyAgent : MonoBehaviour
         CalDist();
 
         // 각각의 거점과 플레이어의 거리합
-        DistanceToRegionNumber();
+        //DistanceToRegionNumber();
         RegionInfluencbyDist();
 
         // 각각의 거점과 가장 가까운 거리의 플레이어의 거리만 유효한 거리합
@@ -53,6 +53,7 @@ public class EnemyAgent : MonoBehaviour
         enemyList = GameObject.FindGameObjectsWithTag("Unit 2");
     }
 
+    // 플레이어마다 각 리전에 가해지는 영향력을 표현
     private void CalDist()
     {
         for (int i = 0; i < playerList.Length; i++)
@@ -67,7 +68,8 @@ public class EnemyAgent : MonoBehaviour
                 // 거리의 역수와 공력력의 곱 사용
                 // 변수이름은 dist이지만 dist에다가 각 유닛의 공격력을 곱했음, 귀찮아서 변수명 안바꿈, 공격력 없이 쓸수도 있으니까
                 dist[i].Add(j, InverseDistXDamage(playerList[i], regionList[j]));
-                
+
+                print("Player " + (i+1) + "->" + j + " : " + dist[i][j]);
 
                 // 컬렉션 초기화 단순화 하기전, 제너릭
                 //dist[i][j] = new Dictionary<int, float>();
@@ -92,6 +94,7 @@ public class EnemyAgent : MonoBehaviour
         }
     }
 
+    // i번쨰 리전에 가해지는 영향력의 합 배열 regionInfluencebyDist
     private void RegionInfluencbyDist()
     {
         for (int i = 0; i < regionList.Length; i++)
@@ -108,6 +111,7 @@ public class EnemyAgent : MonoBehaviour
 
     private void DistanceToRegionAscOrder()
     {
+        
         for (int i = 0; i < dist.Count; i++)
         {
             //var items = from pair in dist[i] orderby pair.Value ascending select pair;
@@ -116,7 +120,7 @@ public class EnemyAgent : MonoBehaviour
             distSorted.Add(items.ToDictionary(pair => pair.Key, pair => pair.Value));
 
 
-            // items 출력
+            //items 출력
             //foreach (KeyValuePair<int, float> pair in items)
             //{
             //    print(pair.Key + " " + pair.Value);
@@ -142,9 +146,9 @@ public class EnemyAgent : MonoBehaviour
 
         for (int i = 0; i < regionInfluencebyVoronoi.Length; i++)
         {
-            print(regionInfluencebyVoronoi[i]);
+            //print(regionInfluencebyVoronoi[i]);
             regionInfluencebyVoronoi[i] *= troops[i];
-            print(regionInfluencebyVoronoi[i]);
+            //print(regionInfluencebyVoronoi[i]);
         }
     }
 

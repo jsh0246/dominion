@@ -103,7 +103,7 @@ public class PlayerInput : MonoBehaviour
         HashSet<SelectableUnit> units = SelectionManager.Instance.SelectedUnits;
         List<Vector3> format = new List<Vector3>();
 
-        print(unitCount);
+        // print(unitCount);
 
 
         for (int i = 0; i < root; i++)

@@ -153,6 +153,9 @@ public class EnemyAgent2 : MonoBehaviour
         for(int i=0; i<regionList.Length; i++)
         {
             var ss = from x in distMine[i] orderby x.Value ascending select x;
+            ditMine[i] = distMine[i].OrderBy(x => x.Value).ToDictionary(x=>key)
+
+            for(int j=0; j<)
         }
     }
 

@@ -4,14 +4,38 @@ using System.Linq;
 using UnityEditor;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.AI;
+using TMPro;
+
+// 유닛은 하나의 리전에만 영향 끼칠수있다고 가정하고, (나중에는 근처 리전에 제곱같은 영향력이 급격히 증가하는 보정값을 더해줄까?)
+// 
+
+
+// 파랑의 입장에서 빨간색을 적군으로 간주하는거야
+
+
+// (((적의 입장에서 나인 것이다)))
+// 현재 가장 쉽게 가보는 구현 상상
+// 1. 적의 영향력은 계산되었다고 가정한다.
+// 2. 내가 적의 영향력이 가장 약한곳부터 가면 얼마나 영향력을 행사할 수 있을까?(행사가 가능할까)
+// 3. 적의 영향력은 거리비례로 계산했는데 나의 영향력은...음..난 움직일건데, 움직이면 영향력이 쎄질건데 내가 리전에 영향력을 행사한다고 하는것은
+//      어느 거리에 있을 때를 내 영향력이라고 계산할 수 있을까?..음 아마 적의 위치쯤에 내가 있을 때의 영향력을 내가 행사할 수 있는 영향력이라고 하면 일단은 될 것 같다.
+// 4. 
+
+
 
 public class EnemyAgent2 : MonoBehaviour
 {
     private GameObject[] playerList, enemyList, regionList;
     private List<Dictionary<int, float>> dist, distMine;
     private Dictionary<int, float> regionInfluencebyDist;
-    Dictionary<int, float> sortedRegionInfluencebyDist;
+    private Dictionary<int, float> sortedRegionInfluencebyDist;
 
+    // 구현중 변수들
+    private List<List<SelectableUnit>> regionsNearestUnits;
+    private Dictionary<int, float> regionValue;
+
+    private List<bool> isStopped;
 
 
 
@@ -22,10 +46,17 @@ public class EnemyAgent2 : MonoBehaviour
         distMine = new List<Dictionary<int, float>>();
         regionInfluencebyDist = new Dictionary<int, float>();
 
+        regionValue = new Dictionary<int, float>();
+        isStopped = new List<bool>();
+
+        // 구현중 변수들
+
+
         GetList();
         InitializeDataStructure();
 
         StartCoroutine(AutoMove());
+        //StartCoroutine(MakeMovable());
     }
 
     private void Update()
@@ -55,9 +86,28 @@ public class EnemyAgent2 : MonoBehaviour
             RegionInfluencbyDist();
             SortByInfluence();
 
-            MyTurn();
+            //MyTurn();
+
+            //NearestUnits();
+            NNUnits();
 
             yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private IEnumerator MakeMovable()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3f);
+
+            for (int i = 0; i < playerList.Length; i++)
+            {
+                if (Vector3.zero == playerList[i].GetComponent<NavMeshAgent>().velocity)
+                {
+                    isStopped[i] = true;
+                }
+            }
         }
     }
 
@@ -76,15 +126,26 @@ public class EnemyAgent2 : MonoBehaviour
 
             for (int j = 0; j < enemyList.Length; j++)
             {
-                dist[i].Add(j, 0);
+                dist[i].Add(j, 0f);
             }
         }
 
-        // regionInfluencebyDist
         for (int i = 0; i < regionList.Length; i++)
         {
-            regionInfluencebyDist.Add(i, 0);
+            // regionInfluencebyDist
+            regionInfluencebyDist.Add(i, 0f);
+
+            // regionsNearestUnits
+            //regionsNearestUnits.Add(new List<SelectableUnit>());
+
+            regionValue.Add(i, 0f);
         }
+
+        for(int i=0; i<playerList.Length; i++)
+        {
+            isStopped.Add(true);
+        }
+
     }
 
     private void CalculateEnemyInfluence()
@@ -138,9 +199,6 @@ public class EnemyAgent2 : MonoBehaviour
         //{
         //    print(sortedRegionInfluencebyDist.ElementAt(i).Key + " : " + sortedRegionInfluencebyDist.ElementAt(i).Value);
         //}
-
-        // 2024 7. 3.
-        // sortedRegionInfluencebyDist 출력해봐서 5개의 리전의 적의 영향력 수치화해서 그리디로 분배하기 반복문 한번 넣어야할듯
     }
 
     private void MyTurn()
@@ -148,8 +206,188 @@ public class EnemyAgent2 : MonoBehaviour
         for(int i=0; i<playerList.Length; i++)
         {
             playerList[i].GetComponent<SelectableUnit>().MoveTo(regionList[sortedRegionInfluencebyDist.ElementAt(0).Key].transform.position);
-            print(sortedRegionInfluencebyDist.ElementAt(0).Key);
+
+            // We go to... 
+            //print(sortedRegionInfluencebyDist.ElementAt(0).Key);
         }
+
+
+        // 하나씩 찾아가기
+    }
+
+    private void NNUnits()
+    {
+        regionsNearestUnits = new List<List<SelectableUnit>>();
+
+        for (int i = 0; i < regionList.Length; i++)
+        {
+            regionsNearestUnits.Add(new List<SelectableUnit>());
+        }
+
+
+
+        for (int i = 0; i < enemyList.Length; i++)
+        {
+            float min = 999999f;
+            int minIdx = -1;
+
+            for (int j = 0; j < regionList.Length; j++)
+            {
+                float length = Dist(enemyList[i], regionList[j]);
+                if (length < min)
+                {
+                    min = length;
+                    minIdx = j;
+                }
+            }
+
+            regionsNearestUnits[minIdx].Add(enemyList[i].GetComponent<SelectableUnit>());
+            //regionValue[i] += InverseDistXDamage(regionList[i], )
+        }
+
+        for (int i = 0; i < regionsNearestUnits.Count; i++)
+        {
+            regionValue[i] = 0f;
+            for (int j = 0; j < regionsNearestUnits[i].Count; j++)
+            {
+                regionValue[i] += InverseDistXDamage(regionsNearestUnits[i][j].gameObject, regionList[i]);
+            }
+
+            //print(i + " : " + regionValue[i]);
+        }
+
+        regionValue = regionValue.OrderBy(item=>item.Value).ToDictionary(x=>x.Key, x=>x.Value);
+
+        for (int i = 0;i<regionValue.Count;i++)
+        {
+            print(regionValue[i]);
+        }
+
+        // regionValue가 약한 순서대로 정렬해서 그리디로 모아서 되는데로 쳐들어가라
+        // 간단하게 생각해라
+
+        for(int i=0; i<regionValue.Count; i++)
+        {
+            // j를 player를 돌면서 하나씩 배치해라
+            // 근데 정렬이 제대로 안되는거같다? 한놈 추가해보니까 정렬이 이상함 ,, dictionary 다시 공부좀
+        }
+    }
+
+
+    //private void NearestUnits()
+    //{
+    //    regionsNearestUnits = new List<List<SelectableUnit>>();
+
+    //    for (int i = 0; i < regionList.Length; i++)
+    //    {
+    //        regionsNearestUnits.Add(new List<SelectableUnit>());
+    //    }
+
+
+
+    //    for (int i = 0; i < enemyList.Length; i++)
+    //    {
+    //        float min = 999999f;
+    //        int minIdx = -1;
+
+    //        for (int j = 0; j < regionList.Length; j++)
+    //        {
+    //            float length = Dist(enemyList[i], regionList[j]);
+    //            if (length < min)
+    //            {
+    //                min = length;
+    //                minIdx = j;
+    //            }
+    //        }
+
+    //        regionsNearestUnits[minIdx].Add(enemyList[i].GetComponent<SelectableUnit>());
+    //        //regionValue[i] += InverseDistXDamage(regionList[i], )
+    //    }
+
+    //    for (int i = 0; i < regionsNearestUnits.Count; i++)
+    //    {
+    //        regionValue[i] = 0f;
+    //        for (int j = 0; j < regionsNearestUnits[i].Count; j++)
+    //        {
+    //            regionValue[i] += InverseDistXDamage(regionsNearestUnits[i][j].gameObject, regionList[i]);
+    //        }
+
+    //        //print(i + " : " + regionValue[i]);
+    //    }
+
+
+    //    // 정렬 추가 해야됨
+    //    int t = 0;
+
+    //    for (int i = 0; i < regionValue.Count; i++)
+    //    {
+    //        if (regionsNearestUnits[i].Count > 0)
+    //        {
+    //            //float enemyValue = InverseDistXDamage(regionsNearestUnits[i][0].gameObject, regionList[i]);
+    //            float playerValue = 0f;
+
+
+    //            for (int j = 0; j < playerList.Length; j++)
+    //            {
+
+
+    //                if (isStopped[j])
+    //                //if (playerList[j].GetComponent<NavMeshAgent>().velocity == Vector3.zero)
+    //                {
+    //                    playerValue += InverseDistXDamage(regionsNearestUnits[i][0].gameObject, regionList[i]);
+    //                    //playerValue = InverseDistXDamage(regionsNearestUnits[i][0].gameObject, regionList[i]);
+
+
+    //                    if (playerValue >= regionValue[i])
+    //                    //if (Mathf.Abs(playerValue - regionValue[i]) < 1f)
+    //                    {
+    //                        // for-loop 해야될거같은데
+
+    //                        // move
+    //                        playerList[j].GetComponent<SelectableUnit>().MoveTo(regionList[i].transform.position);
+    //                        isStopped[j] = false;
+
+    //                        //t = j + 1;
+
+    //                        break;
+    //                    }
+    //                }
+
+
+    //            }
+                
+    //            //print(playerValue);
+    //        }
+              
+            
+
+
+    //    }
+
+
+
+
+
+
+    //    //for (int i = 0; i < regionsNearestUnits.Count; i++)
+    //    //{
+    //    //    print(i + " region : ");
+    //    //    for (int j = 0; j < regionsNearestUnits[i].Count; j++)
+    //    //    {
+    //    //        print(regionsNearestUnits[i][j].name);
+    //    //    }
+    //    //}
+
+    //    //for (int i = 0; i < regionsNearestUnits.Count; i++)
+    //    //{
+    //    //    print(i + " : " + regionsNearestUnits[i].Count);
+    //    //}
+    //}
+
+
+    private float Dist(GameObject a, GameObject b)
+    {
+        return Vector3.Distance(a.transform.position, b.transform.position);
     }
 
     private float InverseDist(GameObject a, GameObject b)

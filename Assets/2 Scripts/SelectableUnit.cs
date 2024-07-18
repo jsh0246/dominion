@@ -23,8 +23,6 @@ public class SelectableUnit : MonoBehaviour
     private float attackTime;
     public int health;
     private int maxHealth;
-
-
     private Vector3 d;
 
     private void Awake()

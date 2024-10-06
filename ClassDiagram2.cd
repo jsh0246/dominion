@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BuildingManager" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECQCkAAAAiERAgAABAAAAYAAAQAAwgAABxAEIIAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\BuildingManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Buildings">
+    <Position X="0.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAEBCAAAQQAAAAAgACAEAAACMACUAQACAISAAA=</HashCode>
+      <FileName>Assets\2 Scripts\Buildings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bullet">
+    <Position X="14.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\Bullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CanvasManager" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAAgCIAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\CanvasManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChangeRenderMode" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\ChangeRenderMode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyAgent" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASDFBAAICAACAIAAAAAAAAgEAAAhAAAAAAAAAACAMo=</HashCode>
+      <FileName>Assets\2 Scripts\EnemyAgent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyAgent2" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASCABCAEiAAAQIAgCAAAAAgEAEAAQAACBAwgAEAAko=</HashCode>
+      <FileName>Assets\2 Scripts\EnemyAgent2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyAgent2Backup" Collapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASDFBCgMiAADAIAgCAAAAAgEAAAhQAACAAgoAAAAMo=</HashCode>
+      <FileName>Assets\2 Scripts\EnemyAgent2Backup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\GameManaer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerInput" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYQCAABBACAAAAAAAAAAAgACAAAEAAIEAAAAAFAIEBA=</HashCode>
+      <FileName>Assets\2 Scripts\PlayerInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Region">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Region.Possession" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\2 Scripts\Region.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACACADAAAggAAAAAAAEABIAEQEAIAgAAQAE=</HashCode>
+      <FileName>Assets\2 Scripts\Region.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Region2" Collapsed="true">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Region2.Possession" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\2 Scripts\Region2.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACACADAAAggAAAAAAAFAAIAEQEAIAgAAQAA=</HashCode>
+      <FileName>Assets\2 Scripts\Region2.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScoreManager">
+    <Position X="6" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAIAAAmQAAIAEAABABgABAAAIAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\ScoreManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SelectableUnit">
+    <Position X="2.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAIAAAIAAAAgIEAARAAEIhIAAAkQBAAAAIQAEg=</HashCode>
+      <FileName>Assets\2 Scripts\SelectableUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SelectionManager" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAoAAEAAAAAACAAAAAAAAAAAAQAAQQAAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\SelectionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnitController">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAg=</HashCode>
+      <FileName>Assets\2 Scripts\UnitController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnitGenerator" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABCAAAAAAAAAAgAAAAAAAAAAAAADAAEAAAAA=</HashCode>
+      <FileName>Assets\2 Scripts\UnitGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DemoScene" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAACAAAAAAAAAAAAAAAAACAAAAIAAAAA=</HashCode>
+      <FileName>Assets\RTS_Camera\Demo\DemoScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TargetSelector" Collapsed="true">
+    <Position X="2.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\RTS_Camera\Demo\TargetSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RTS_Cam.RTS_Camera" Collapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ENRSMEAIIqADEKrAABCAgAEAEYEQ0YCABwCAQ4ICEgo=</HashCode>
+      <FileName>Assets\RTS_Camera\Scripts\RTS_Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
